@@ -17,7 +17,8 @@
 #include <unordered_map>
 #include "System.hpp"
 #include "Hart.hpp"
-
+#include <vector>
+#include <utility>
 
 namespace WdRiscv
 {
@@ -53,40 +54,40 @@ namespace WdRiscv
             FILE* traceFile);
 
     // API: get all int gpr
-    vector<URV> peekAllIntRegs(Hart<URV>& hart);
+    std::vector<URV> peekAllIntRegs(Hart<URV>& hart);
 
     // API: get all CSR value
-    vector<URV> peekAllCsrs(Hart<URV>& hart);
+    std::vector<std::pair<URV,std::string>> peekAllCsrs(Hart<URV>& hart);
 
     // API: get all Fp register value
-    vector<URV> peekAllFpRegs(Hart<URV>& hart);
+    std::vector<URV> peekAllFpRegs(Hart<URV>& hart);
 
     // API: get specific int gpr
-    URV peekIntReg(Hart<URV>& hart, unsigned reg);
+    URV peekIntReg(Hart<URV>& hart, const unsigned reg);
 
     // API: get specific float gpr
-    URV peekFpReg(Hart<URV>& hart, unsigned reg);
+    // URV peekFpReg(Hart<URV>& hart, const unsigned reg);
 
     // API: get specific csr register value
-    URV peekCsr(Hart<URV>& hart, CsrNumber csr);
+    // URV peekCsr(Hart<URV>& hart, CsrNumber csr);
 
     // API: get pc value
     URV peekPc(Hart<URV>& hart);
 
     // API: set specific int gpr value
-    bool pokeIntReg(unsigned reg, URV val);
+    bool pokeIntReg(const unsigned reg, URV val);
 
     // API: set specific fp gpr value
-    bool peekFpReg(unsigned reg, uint64_t& val) const;
+    bool pokeFpReg(const unsigned reg, const uint64_t val) const;
 
     // API: set specific csr register value
     bool pokeCsr(CsrNumber csr, URV val);
 
     // API: set specific PC value
-    void pokePc(URV address);
+    void pokePc(const URV address);
 
     // API: dissassembly current instruction
-    string disassCurrentInst(Hart<URV>&);
+    std::string disassCurrentInst(Hart<URV>&);
 
     // API: Load ELF file.
     bool loadElf(Hart<URV>&, const std::string& filename);
@@ -95,7 +96,7 @@ namespace WdRiscv
     bool loadHex(Hart<URV>&, const std::string& filename);
 
     // API: Reset processor and jump to reset_pc.
-    bool resetCommand(Hart<URV>&, size_t reset_pc);
+    bool resetCommand(Hart<URV>&, const size_t reset_pc);
 
   private:
 

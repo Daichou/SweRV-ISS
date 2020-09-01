@@ -43,7 +43,7 @@ getHexForm()
 }
 
 template <typename URV>
-Lockstep<URV>::(System<URV>& system)
+Lockstep<URV>::Lockstep(System<URV>& system)
   : system_(system)
 {
 }
@@ -139,51 +139,50 @@ peekAllCsrs(Hart<URV>& hart)
 }
 
 template <typename URV>
-URV peekIntReg(Hart<URV>& hart, unsigned reg)
+URV peekIntReg(Hart<URV>& hart, const unsigned reg)
 {
-
+  return hart.peekIntReg(reg);
 }
-
+/*
 template <typename URV>
 URV peekFpReg(Hart<URV>& hart, unsigned reg)
 {
-
 }
 
 template <typename URV>
 URV peekCsr(Hart<URV>& hart, CsrNumber csr)
 {
-
+  
 }
-
+*/
 template <typename URV>
 URV peekPc(Hart<URV>& hart)
 {
-
+  return hart.peekPc();
 }
 
 template <typename URV>
-bool pokeIntReg(unsigned reg, URV val)
+bool pokeIntReg(Hart<URV>& hart, unsigned reg, URV val)
 {
-
+  return hart.pokeIntReg(reg, val);
 }
 
 template <typename URV>
-bool peekFpReg(unsigned reg, uint64_t& val)
+bool pokeFpReg(Hart<URV>& hart, unsigned reg, uint64_t& val)
 {
-
+  return hart.pokeFpReg(reg, val);
 }
 
 template <typename URV>
-bool pokeCsr(CsrNumber csr, URV val)
+bool pokeCsr(Hart<URV>& hart, CsrNumber csr, URV val)
 {
-
+  return hart.pokeCsr(csr, val);
 }
 
 template <typename URV>
-void pokePc(URV address)
+void pokePc(Hart<URV>& hart, URV address)
 {
-
+  hart.pokePc(address);
 }
 
 template <typename URV>
@@ -191,15 +190,17 @@ std::string
 Lockstep<URV>::disassCurrentInst(Hart<URV>& hart)
 {
 	std::string str;
-	//TODO: get current inst
-	hart.disassembleInst(code, str);
+	//URV pc = hart.peekPc();
+  //uint32_t code;
+  //hart.fetchInst(pc, code);
+  //hart.disassembleInst(code, str);
 	return str;
 }
 
 
 template <typename URV>
 bool
-Lockstep<URV>::LoadElf(Hart<URV>& hart, const std::string& filename)
+Lockstep<URV>::loadElf(Hart<URV>& hart, const std::string& filename)
 {
   size_t entryPoint = 0;
 
@@ -214,7 +215,7 @@ Lockstep<URV>::LoadElf(Hart<URV>& hart, const std::string& filename)
 
 template <typename URV>
 bool
-Lockstep<URV>::hexCommand(Hart<URV>& hart, const std::string& filename)
+Lockstep<URV>::loadHex(Hart<URV>& hart, const std::string& filename)
 {
   if (not hart.loadHexFile(filename))
     return false;
