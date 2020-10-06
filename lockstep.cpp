@@ -89,7 +89,7 @@ Lockstep<URV>::stepCommand(Hart<URV>& hart, const size_t count,
 
 template <typename URV>
 std::vector <URV>
-peekAllFpRegs(Hart<URV>& hart)
+Lockstep<URV>::peekAllFpRegs(Hart<URV>& hart)
 {
   std::vector <URV> fp_list; 
   for (unsigned i = 0; i < hart.fpRegCount(); ++i)
@@ -105,7 +105,7 @@ peekAllFpRegs(Hart<URV>& hart)
 
 template <typename URV>
 std::vector <URV>
-peekAllIntRegs(Hart<URV>& hart)
+Lockstep<URV>::peekAllIntRegs(Hart<URV>& hart)
 {
   std::vector <URV> gpr_list;
 
@@ -122,7 +122,7 @@ peekAllIntRegs(Hart<URV>& hart)
 
 template <typename URV>
 std::vector<std::pair<URV, std::string>>
-peekAllCsrs(Hart<URV>& hart)
+Lockstep<URV>::peekAllCsrs(Hart<URV>& hart)
 {
   std::vector<std::pair<URV, std::string>> csr_list;
 
@@ -139,48 +139,48 @@ peekAllCsrs(Hart<URV>& hart)
 }
 
 template <typename URV>
-URV peekIntReg(Hart<URV>& hart, const unsigned reg)
+URV Lockstep<URV>::peekIntReg(Hart<URV>& hart, const unsigned reg)
 {
   return hart.peekIntReg(reg);
 }
 /*
 template <typename URV>
-URV peekFpReg(Hart<URV>& hart, unsigned reg)
+Lockstep<URV>::URV peekFpReg(Hart<URV>& hart, unsigned reg)
 {
 }
 
 template <typename URV>
-URV peekCsr(Hart<URV>& hart, CsrNumber csr)
+Lockstep<URV>::URV peekCsr(Hart<URV>& hart, CsrNumber csr)
 {
   
 }
 */
 template <typename URV>
-URV peekPc(Hart<URV>& hart)
+URV Lockstep<URV>::peekPc(Hart<URV>& hart)
 {
   return hart.peekPc();
 }
 
 template <typename URV>
-bool pokeIntReg(Hart<URV>& hart, unsigned reg, URV val)
+bool Lockstep<URV>::pokeIntReg(Hart<URV>& hart, unsigned reg, URV val)
 {
   return hart.pokeIntReg(reg, val);
 }
 
 template <typename URV>
-bool pokeFpReg(Hart<URV>& hart, unsigned reg, uint64_t& val)
+bool Lockstep<URV>::pokeFpReg(Hart<URV>& hart, const unsigned reg,const uint64_t val)
 {
   return hart.pokeFpReg(reg, val);
 }
 
 template <typename URV>
-bool pokeCsr(Hart<URV>& hart, CsrNumber csr, URV val)
+bool Lockstep<URV>::pokeCsr(Hart<URV>& hart, CsrNumber csr, URV val)
 {
   return hart.pokeCsr(csr, val);
 }
 
 template <typename URV>
-void pokePc(Hart<URV>& hart, URV address)
+void Lockstep<URV>::pokePc(Hart<URV>& hart, URV address)
 {
   hart.pokePc(address);
 }

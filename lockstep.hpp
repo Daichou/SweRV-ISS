@@ -75,16 +75,16 @@ namespace WdRiscv
     URV peekPc(Hart<URV>& hart);
 
     // API: set specific int gpr value
-    bool pokeIntReg(const unsigned reg, URV val);
+    bool pokeIntReg(Hart<URV>& hart, const unsigned reg, URV val);
 
     // API: set specific fp gpr value
-    bool pokeFpReg(const unsigned reg, const uint64_t val) const;
+    bool pokeFpReg(Hart<URV>& hart, const unsigned reg, const uint64_t val);
 
     // API: set specific csr register value
-    bool pokeCsr(CsrNumber csr, URV val);
+    bool pokeCsr(Hart<URV>& hart, CsrNumber csr, URV val);
 
     // API: set specific PC value
-    void pokePc(const URV address);
+    void pokePc(Hart<URV>& hart, const URV address);
 
     // API: dissassembly current instruction
     std::string disassCurrentInst(Hart<URV>&);
