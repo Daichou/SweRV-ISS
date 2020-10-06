@@ -102,6 +102,22 @@ Lockstep<URV>::peekAllFpRegs(Hart<URV>& hart)
   return fp_list;
 }
 
+template <typename URV>
+std::vector <URV>
+Lockstep<URV>::peekAllFpRegs(const unsigned HartId)
+{
+  auto& hart = *system_.ithHart(HartId);
+  std::vector <URV> fp_list;
+  for (unsigned i = 0; i < hart.fpRegCount(); ++i)
+  {
+    uint64_t val = 0;
+    if (hart.peekFpReg(i, val))
+      fp_list.push_back(val);
+  }
+
+  return fp_list;
+}
+
 
 template <typename URV>
 std::vector <URV>
@@ -119,6 +135,23 @@ Lockstep<URV>::peekAllIntRegs(Hart<URV>& hart)
   return gpr_list;
 }
 
+
+template <typename URV>
+std::vector <URV>
+Lockstep<URV>::peekAllIntRegs(const unsigned hartId)
+{
+  std::vector <URV> gpr_list;
+  auto& hart = *system_.ithHart(hartId);
+
+  for (unsigned i = 0; i < hart.intRegCount(); ++i)
+  {
+    std::string name;
+    URV val = 0;
+    if (hart.peekIntReg(i, val, name))
+      gpr_list.push_back(val);
+  }
+  return gpr_list;
+}
 
 template <typename URV>
 std::vector<std::pair<URV, std::string>>
@@ -143,6 +176,13 @@ URV Lockstep<URV>::peekIntReg(Hart<URV>& hart, const unsigned reg)
 {
   return hart.peekIntReg(reg);
 }
+
+template <typename URV>
+URV Lockstep<URV>::peekIntReg(const unsigned hartId, const unsigned reg)
+{
+  auto& hart = *system_.ithHart(hartId);
+  return hart.peekIntReg(reg);
+}
 /*
 template <typename URV>
 Lockstep<URV>::URV peekFpReg(Hart<URV>& hart, unsigned reg)
@@ -162,8 +202,75 @@ URV Lockstep<URV>::peekPc(Hart<URV>& hart)
 }
 
 template <typename URV>
+URV Lockstep<URV>::peekPc(const unsigned hartId)
+{
+  auto& hart = *system_.ithHart(hartId);
+  return hart.peekPc();
+}
+
+template <typename URV>
+uint8_t Lockstep<URV>::peekMemory8(Hart<URV> & hart, const size_t address)
+{
+	uint8_t val;
+	hart.peekMemory(address, val);
+	return val;
+}
+
+template <typename URV>
+uint32_t Lockstep<URV>::peekMemory32(Hart<URV> & hart, const size_t address)
+{
+	uint32_t val;
+	hart.peekMemory(address, val);
+	return val;
+}
+
+template <typename URV>
+uint64_t Lockstep<URV>::peekMemory64(Hart<URV> & hart, const size_t address)
+{
+	uint64_t val;
+	hart.peekMemory(address, val);
+	return val;
+}
+
+template <typename URV>
+uint8_t Lockstep<URV>::peekMemory8(const unsigned hartId, const size_t address)
+{
+  auto& hart = *system_.ithHart(hartId);
+	uint8_t val;
+	hart.peekMemory(address, val);
+	return val;
+}
+
+template <typename URV>
+uint32_t Lockstep<URV>::peekMemory32(const unsigned hartId, const size_t address)
+{
+  auto& hart = *system_.ithHart(hartId);
+	uint32_t val;
+	hart.peekMemory(address, val);
+	return val;
+}
+
+template <typename URV>
+uint64_t Lockstep<URV>::peekMemory64(const unsigned hartId, const size_t address)
+{
+  auto& hart = *system_.ithHart(hartId);
+	uint64_t val;
+	hart.peekMemory(address, val);
+	return val;
+}
+
+
+
+template <typename URV>
 bool Lockstep<URV>::pokeIntReg(Hart<URV>& hart, unsigned reg, URV val)
 {
+  return hart.pokeIntReg(reg, val);
+}
+
+template <typename URV>
+bool Lockstep<URV>::pokeIntReg(const unsigned hartId, unsigned reg, URV val)
+{
+  auto& hart = *system_.ithHart(hartId);
   return hart.pokeIntReg(reg, val);
 }
 
@@ -174,8 +281,23 @@ bool Lockstep<URV>::pokeFpReg(Hart<URV>& hart, const unsigned reg,const uint64_t
 }
 
 template <typename URV>
+bool Lockstep<URV>::pokeFpReg(const unsigned hartId, const unsigned reg,
+    const uint64_t val)
+{
+  auto& hart = *system_.ithHart(hartId);
+  return hart.pokeFpReg(reg, val);
+}
+
+template <typename URV>
 bool Lockstep<URV>::pokeCsr(Hart<URV>& hart, CsrNumber csr, URV val)
 {
+  return hart.pokeCsr(csr, val);
+}
+
+template <typename URV>
+bool Lockstep<URV>::pokeCsr(const unsigned hartId, CsrNumber csr, URV val)
+{
+  auto& hart = *system_.ithHart(hartId);
   return hart.pokeCsr(csr, val);
 }
 
@@ -186,18 +308,58 @@ void Lockstep<URV>::pokePc(Hart<URV>& hart, URV address)
 }
 
 template <typename URV>
+void Lockstep<URV>::pokePc(const unsigned hartId, URV address)
+{
+  auto& hart = *system_.ithHart(hartId);
+  hart.pokePc(address);
+}
+
+template <typename URV>
 std::string
 Lockstep<URV>::disassCurrentInst(Hart<URV>& hart)
 {
 	std::string str;
-	//URV pc = hart.peekPc();
-  //uint32_t code;
-  //hart.fetchInst(pc, code);
-  //hart.disassembleInst(code, str);
+	URV pc = hart.peekPc();
+  uint32_t inst;
+  hart.peekMemory(pc, inst);
+	hart.disassembleInst(inst, str);
 	return str;
 }
 
+template <typename URV>
+std::string
+Lockstep<URV>::disassCurrentInst(const unsigned hartId)
+{
+  auto& hart = *system_.ithHart(hartId);
+	std::string str;
+	URV pc = hart.peekPc();
+  uint32_t inst;
+  hart.peekMemory(pc, inst);
+	hart.disassembleInst(inst, str);
+	return str;
+}
 
+template <typename URV>
+std::string Lockstep<URV>::disassSpecInst(Hart<URV>& hart, const size_t address)
+{
+	std::string str;
+  uint32_t inst;
+  hart.peekMemory(address, inst);
+	hart.disassembleInst(inst, str);
+	return str;
+}
+
+template <typename URV>
+std::string Lockstep<URV>::disassSpecInst(const unsigned hartId, const size_t address)
+{
+  auto& hart = *system_.ithHart(hartId);
+	std::string str;
+  uint32_t inst;
+  hart.peekMemory(address, inst);
+	hart.disassembleInst(inst, str);
+	return str;
+
+}
 template <typename URV>
 bool
 Lockstep<URV>::loadElf(Hart<URV>& hart, const std::string& filename)

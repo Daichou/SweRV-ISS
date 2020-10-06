@@ -1526,8 +1526,9 @@ sessionRun(System<URV>& system, const Args& args, FILE* traceFile, FILE* cmdLog)
       auto& hart = *system.ithHart(0);
       lockstep.stepCommand(hart, 1 , traceFile);
       std::cout << "step count : " << i << std::endl;
+      std::cout << "step Inst : " << lockstep.disassCurrentInst(hart) << std::endl;
       for (unsigned j = 0 ; j < 32 ; j++ ) {
-        std::cout << "x" << j << ": " << lockstep.peekIntReg(hart, j) << std::endl;
+        std::cout << "x" << j << ": " << lockstep.peekIntReg(0, j) << std::endl;
       }
     }
     return true;

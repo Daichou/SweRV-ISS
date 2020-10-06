@@ -56,14 +56,22 @@ namespace WdRiscv
     // API: get all int gpr
     std::vector<URV> peekAllIntRegs(Hart<URV>& hart);
 
+    std::vector<URV> peekAllIntRegs(const unsigned HartId);
+
     // API: get all CSR value
     std::vector<std::pair<URV,std::string>> peekAllCsrs(Hart<URV>& hart);
+
+    std::vector<std::pair<URV,std::string>> peekAllCsrs(const unsigned HartId);
 
     // API: get all Fp register value
     std::vector<URV> peekAllFpRegs(Hart<URV>& hart);
 
+    std::vector<URV> peekAllFpRegs(const unsigned HartId);
+
     // API: get specific int gpr
     URV peekIntReg(Hart<URV>& hart, const unsigned reg);
+
+    URV peekIntReg(const unsigned HartId, const unsigned reg);
 
     // API: get specific float gpr
     // URV peekFpReg(Hart<URV>& hart, const unsigned reg);
@@ -74,21 +82,44 @@ namespace WdRiscv
     // API: get pc value
     URV peekPc(Hart<URV>& hart);
 
+    URV peekPc(const unsigned HartId);
+
+    uint8_t peekMemory8(Hart<URV> & hart, const size_t address);
+    uint32_t peekMemory32(Hart<URV> & hart, const size_t address);
+    uint64_t peekMemory64(Hart<URV> & hart, const size_t address);
+
+    uint8_t peekMemory8(const unsigned hartId, const size_t address);
+    uint32_t peekMemory32(const unsigned hartId, const size_t address);
+    uint64_t peekMemory64(const unsigned hartId, const size_t address);
     // API: set specific int gpr value
     bool pokeIntReg(Hart<URV>& hart, const unsigned reg, URV val);
+
+    bool pokeIntReg(const unsigned HartId, const unsigned reg, URV val);
 
     // API: set specific fp gpr value
     bool pokeFpReg(Hart<URV>& hart, const unsigned reg, const uint64_t val);
 
+    bool pokeFpReg(const unsigned HartId, const unsigned reg, const uint64_t val);
+
     // API: set specific csr register value
     bool pokeCsr(Hart<URV>& hart, CsrNumber csr, URV val);
+
+    bool pokeCsr(const unsigned HartId, CsrNumber csr, URV val);
 
     // API: set specific PC value
     void pokePc(Hart<URV>& hart, const URV address);
 
+    void pokePc(const unsigned HartId, const URV address);
+
     // API: dissassembly current instruction
     std::string disassCurrentInst(Hart<URV>&);
 
+    std::string disassCurrentInst(const unsigned HartId);
+
+    // API: dissassembly current instruction
+    std::string disassSpecInst(Hart<URV>&, const size_t address);
+
+    std::string disassSpecInst(const unsigned HartId, const size_t address);
     // API: Load ELF file.
     bool loadElf(Hart<URV>&, const std::string& filename);
 
