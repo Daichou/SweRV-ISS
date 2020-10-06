@@ -1,6 +1,7 @@
 INSTALL_DIR := .
 
 PROJECT := whisper
+PROJECT_LOCK := whisper_lock
 
 # For Static Linking to Boost Library
 # STATIC_LINK := 1
@@ -79,6 +80,10 @@ $(BUILD_DIR)/%.c.o:  %.c
 $(BUILD_DIR)/$(PROJECT): $(BUILD_DIR)/whisper.cpp.o \
                          $(BUILD_DIR)/librvcore.a
 	$(CXX) -o $@ $^ $(LINK_DIRS) $(LINK_LIBS)
+$(BUILD_DIR)/$(PROJECT_LOCK): $(BUILD_DIR)/whisper_lock.cpp.o \
+                         $(BUILD_DIR)/librvcore.a
+	$(CXX) -o $@ $^ $(LINK_DIRS) $(LINK_LIBS)
+
 
 # List of all CPP sources needed for librvcore.a
 RVCORE_SRCS := IntRegs.cpp CsRegs.cpp FpRegs.cpp instforms.cpp \
@@ -87,7 +92,7 @@ RVCORE_SRCS := IntRegs.cpp CsRegs.cpp FpRegs.cpp instforms.cpp \
             Server.cpp Interactive.cpp decode.cpp disas.cpp \
 	    Syscall.cpp PmaManager.cpp DecodedInst.cpp snapshot.cpp \
 	    PmpManager.cpp VirtMem.cpp Core.cpp System.cpp Cache.cpp \
-	    Tlb.cpp
+	    Tlb.cpp lockstep.cpp
 
 # List of All CPP Sources for the project
 SRCS_CXX += $(RVCORE_SRCS) whisper.cpp
@@ -110,14 +115,16 @@ OBJS := $(RVCORE_SRCS:%=$(BUILD_DIR)/%.o) $(SRCS_C:%=$(BUILD_DIR)/%.o)
 $(BUILD_DIR)/librvcore.a: $(OBJS)
 	$(AR) cr $@ $^
 
-install: $(BUILD_DIR)/$(PROJECT)
+all: $(BUILD_DIR)/$(PROJECT) $(BUILD_DIR)/$(PROJECT_LOCK)
+
+install: $(BUILD_DIR)/$(PROJECT) $(BUILD_DIR)/$(PROJECT_LOCK)
 	@if test "." -ef "$(INSTALL_DIR)" -o "" == "$(INSTALL_DIR)" ; \
          then echo "INSTALL_DIR is not set or is same as current dir" ; \
          else echo cp $^ $(INSTALL_DIR); cp $^ $(INSTALL_DIR); \
          fi
 
 clean:
-	$(RM) $(BUILD_DIR)/$(PROJECT) $(OBJS_GEN) $(BUILD_DIR)/librvcore.a $(DEPS_FILES)
+	$(RM) $(BUILD_DIR)/$(PROJECT) $(BUILD_DIR)/$(PROJECT_LOCK) $(OBJS_GEN) $(BUILD_DIR)/librvcore.a $(DEPS_FILES)
 
 help:
 	@echo "Possible targets: $(BUILD_DIR)/$(PROJECT) install clean"

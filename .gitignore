@@ -1,4 +1,5 @@
 *.d
 *.o
 whisper
+whisper_lock
 librvcore.a
