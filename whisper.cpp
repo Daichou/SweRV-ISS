@@ -16,6 +16,7 @@
 #include <fstream>
 #include <sstream>
 #include <thread>
+#include <atomic>
 #include <experimental/filesystem>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
