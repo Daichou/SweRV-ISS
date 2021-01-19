@@ -565,6 +565,12 @@ Hart<URV>::peekMemory(size_t address, uint64_t& val) const
   return true;
 }
 
+template <typename URV>
+std::tuple<bool, URV, URV>
+Hart<URV>::peekCurrentLdSt() const
+{
+    return std::make_tuple(ldStAddrValid_, ldStAddr_, CurldStVal_);
+}
 
 template <typename URV>
 bool
@@ -1822,6 +1828,7 @@ Hart<URV>::load(uint32_t rd, uint32_t rs1, int32_t imm)
               putInLoadQueue(ldSize, addr, rd, prevRdVal);
             }
           intRegs_.write(rd, value);
+          CurldStVal_ = value;
           return true;  // Success.
         }
     }
@@ -1894,7 +1901,7 @@ Hart<URV>::store(unsigned rs1, URV base, URV virtAddr, STORE_TYPE storeVal)
 
   ldStAddr_ = virtAddr;   // For reporting ld/st addr in trace-mode.
   ldStAddrValid_ = true;  // For reporting ld/st addr in trace-mode.
-
+  CurldStVal_ = storeVal;
   // ld/st-address or instruction-address triggers have priority over
   // ld/st access or misaligned exceptions.
   bool hasTrig = hasActiveTrigger();

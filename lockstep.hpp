@@ -19,6 +19,7 @@
 #include "Hart.hpp"
 #include <vector>
 #include <utility>
+#include <tuple>
 
 namespace WdRiscv
 {
@@ -110,6 +111,11 @@ namespace WdRiscv
     void pokePc(Hart<URV>& hart, const URV address);
 
     void pokePc(const unsigned HartId, const URV address);
+
+    // API: get Current Instruction Ld/St address and value
+    std::tuple<bool, URV, URV> peekCurLdSt(const unsigned HartId);
+
+    std::tuple<bool, URV, URV> peekCurLdSt(Hart<URV>& hart);
 
     // API: dissassembly current instruction
     std::string disassCurrentInst(Hart<URV>&);

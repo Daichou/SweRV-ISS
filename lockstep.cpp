@@ -308,6 +308,21 @@ void Lockstep<URV>::pokePc(Hart<URV>& hart, URV address)
 }
 
 template <typename URV>
+std::tuple<bool, URV, URV>
+Lockstep<URV>::peekCurLdSt(const unsigned HartId)
+{
+  auto& hart = *system_.ithHart(HartId);
+  return hart.peekCurrentLdSt();
+}
+
+template <typename URV>
+std::tuple<bool, URV, URV>
+Lockstep<URV>::peekCurLdSt(Hart<URV>& hart)
+{
+  return hart.peekCurrentLdSt();
+}
+
+template <typename URV>
 void Lockstep<URV>::pokePc(const unsigned hartId, URV address)
 {
   auto& hart = *system_.ithHart(hartId);

@@ -32,6 +32,7 @@
 #include "Syscall.hpp"
 #include "PmpManager.hpp"
 #include "VirtMem.hpp"
+#include <tuple>
 
 namespace WdRiscv
 {
@@ -513,6 +514,8 @@ namespace WdRiscv
 
     /// Double-word version of the above.
     bool pokeMemory(size_t address, uint64_t val);
+
+    std::tuple<bool, URV, URV> peekCurrentLdSt() const;
 
     /// Define value of program counter after a reset.
     void defineResetPc(URV addr)
@@ -2055,6 +2058,7 @@ namespace WdRiscv
     bool traceLdSt_ = false;        // Trace addr of ld/st insts if true.
     URV ldStAddr_ = 0;              // Address of data of most recent ld/st inst.
     bool ldStAddrValid_ = false;    // True if ldStAddr_ valid.
+    URV CurldStVal_ = 0;           // Store data of current data
 
     // We keep track of the last committed 8 loads so that we can
     // revert in the case of an imprecise load exception.
