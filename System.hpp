@@ -16,6 +16,7 @@
 #pragma once
 
 #include <Memory.hpp>
+#include <memory>
 
 
 namespace WdRiscv
